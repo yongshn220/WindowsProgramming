@@ -3,6 +3,8 @@
 #include <vector>
 #include <algorithm>
 #include <stack>
+#include <iostream>
+#include <cmath>
 
 class CalculationHelper
 {
@@ -13,11 +15,11 @@ public:
 
 	static std::vector<point> GetOutterHulls(std::vector<point> points);
 
-	static void SortByAngle(std::vector<point> points);
+	static std::vector<point> SortByAngle(std::vector<point> points);
 	static bool SortByAngleFunc(point a, point b);
 
 	// a -> r -> c
-	static bool IsCCW(vector a, vector b);
+	static int IsCCW(vector a, vector b);
 
 	static vector ToVector(point a, point b);
 

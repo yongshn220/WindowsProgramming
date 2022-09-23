@@ -4,18 +4,24 @@ class Preset
 {
 
 public:
-	int MAXWIDTH = 100;
-	int MAXHEIGHT = 100;
+	int MAXWIDTH;
+	int MAXHEIGHT;
+
+	Preset()
+	{
+		MAXWIDTH = 300;
+		MAXHEIGHT = 300;
+	}
 };
 
 struct point
 {
-	int x;
-	int y;
+	float x;
+	float y;
 };
 
 struct vector
 {
-	int x;
-	int y;
+	float x;
+	float y;
 };

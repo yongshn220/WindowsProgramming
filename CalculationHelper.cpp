@@ -1,30 +1,26 @@
-#pragma once
-#include "CalculationHelper.h";
+#include "CalculationHelper.h"
 
 point CalculationHelper::lowestPoint = { 0,0 };
 
 CalculationHelper::CalculationHelper()
 {
-	CalculationHelper::lowestPoint = { 0,0 };
 }
 
 std::vector<point> CalculationHelper::GetOutterHulls(std::vector<point> points)
 {
-	SortByAngle(points);
+	points = SortByAngle(points);
 
 	std::stack<point> stack;
 
 	stack.push(points[0]);
 	stack.push(points[1]);
 
-
 	for (int i = 2; i < points.size(); i++)
 	{
 		point next = points[i];
 		point p = stack.top();
 		stack.pop();
-
-		while (!stack.empty() && !IsCCW(ToVector(stack.top(), p), ToVector(p, next)))
+		while (!stack.empty() && IsCCW(ToVector(stack.top(), p), ToVector(p, next)) == -1)
 		{
 			p = stack.top();
 			stack.pop();
@@ -33,7 +29,8 @@ std::vector<point> CalculationHelper::GetOutterHulls(std::vector<point> points)
 		stack.push(next);
 	}
 	std::vector<point> hulls;
-	for (int i = 0; i < stack.size(); i++)
+	int size = stack.size();
+	for (int i = 0; i < size; i++)
 	{
 		hulls.push_back(stack.top());
 		stack.pop();
@@ -42,31 +39,46 @@ std::vector<point> CalculationHelper::GetOutterHulls(std::vector<point> points)
 	return hulls;
 }
 
-void CalculationHelper::SortByAngle(std::vector<point> points)
+std::vector<point> CalculationHelper::SortByAngle(std::vector<point> points)
 {
 	CalculationHelper::lowestPoint = getLowestPoint(points);
 	std::sort(points.begin(), points.end(), SortByAngleFunc);
+	return points;
 }
 
 bool CalculationHelper::SortByAngleFunc(point a, point b)
 {
-	if (isPointEqual(a, CalculationHelper::lowestPoint)) { return false; }
-	if (isPointEqual(b, CalculationHelper::lowestPoint)) { return true; }
+	point lp = CalculationHelper::lowestPoint;
+	if (isPointEqual(a, lp)) { return true; }
+	if (isPointEqual(b, lp)) { return false; }
 
-	if (IsCCW(ToVector(CalculationHelper::lowestPoint, a), ToVector(CalculationHelper::lowestPoint, b))) { return false; }
-	return true;
+	int isCCW = IsCCW(ToVector(lp, a), ToVector(lp, b));
+
+	if (isCCW == 0)
+	{
+		if (a.x == b.x)
+		{
+			return (a.y < b.y);
+		}
+		return pow((lp.x - a.x), 2) < pow((lp.x - b.x), 2);
+	}
+	if (isCCW == 1) { return true; }
+	return false;
 }
 
 // a -> r -> c
-bool CalculationHelper::IsCCW(vector a, vector b)
+int CalculationHelper::IsCCW(vector a, vector b)
 {
-	if (a.x * b.y - a.y * b.x > 0) return true;
-	return false;
+	int dir = a.x * b.y - a.y * b.x;
+	if (dir == 0) return 0;
+	else if (dir > 0) return 1;
+	return -1;
 }
 
 vector CalculationHelper::ToVector(point a, point b)
 {
-	return { b.x - a.x, b.y - a.y };
+	vector v = { b.x - a.x, b.y - a.y };
+	return v;
 }
 
 point CalculationHelper::getLowestPoint(std::vector<point> points)
