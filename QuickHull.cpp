@@ -30,3 +30,9 @@ void QuickHull::CalculateOutterHulls()
 {
 	QuickHull::hulls = CalculationHelper::GetOutterHulls(QuickHull::points);
 }
+
+
+
+
+
+

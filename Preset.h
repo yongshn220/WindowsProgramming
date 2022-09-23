@@ -9,8 +9,8 @@ public:
 
 	Preset()
 	{
-		MAXWIDTH = 300;
-		MAXHEIGHT = 300;
+		MAXWIDTH = 100;
+		MAXHEIGHT = 100;
 	}
 };
 
