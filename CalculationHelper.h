@@ -26,4 +26,10 @@ public:
 	static point getLowestPoint(std::vector<point> points);
 
 	static bool isPointEqual(point a, point b);
+
+	static bool IsPointInsideConvex(std::vector<point> hulls, point t);
+
+	static point GetLeftMostPoint(std::vector<point> hulls);
+
+	static int GetLastIndexUnderTarget(std::vector<point> hulls, point lowestPoint, point target);
 };

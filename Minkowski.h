@@ -14,7 +14,7 @@ public:
 	std::vector<point> sumPoints;
 	std::vector<point> diffPoints;
 
-	bool ishit;
+	bool isOverlap;
 
 	Minkowski()
 	{

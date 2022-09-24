@@ -20,7 +20,7 @@ public:
 
 	void CalculateOutterHulls();
 
-	bool IsPointInsideConvex();
+	bool IsPointInsideConvex(point t);
 
 	point GetLeftMostPoint(std::vector<point> hulls);
 

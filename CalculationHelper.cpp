@@ -99,3 +99,58 @@ bool CalculationHelper::isPointEqual(point a, point b)
 {
 	return (a.x == b.x && a.y == b.y);
 }
+
+bool CalculationHelper::IsPointInsideConvex(std::vector<point> hulls, point t)
+{
+	point lowestHull = CalculationHelper::getLowestPoint(hulls);
+
+	if (t.y < lowestHull.y) return false;
+
+	int lastIndexUnderTarget = CalculationHelper::GetLastIndexUnderTarget(hulls, lowestHull, t);
+
+	// if the target stays behind of the first and last vector of the outter hullls
+	if (lastIndexUnderTarget == 0 || lastIndexUnderTarget == hulls.size() - 1)
+	{
+		return false;
+	}
+
+	vector pToNp = CalculationHelper::ToVector(hulls[lastIndexUnderTarget], hulls[lastIndexUnderTarget + 1]); // vector (point to the next point)
+	vector pToT = CalculationHelper::ToVector(hulls[lastIndexUnderTarget], t); // vector (point to target)
+
+	bool result = (CalculationHelper::IsCCW(pToNp, pToT) != -1);
+
+	return result;
+}
+
+point CalculationHelper::GetLeftMostPoint(std::vector<point> hulls)
+{
+	point lmp = { 101, 0 };
+	for (int i = 0; i < hulls.size(); i++)
+	{
+		point p = hulls[i];
+		if (p.x < lmp.x)
+		{
+			lmp = p;
+		}
+	}
+	return lmp;
+}
+
+int CalculationHelper::GetLastIndexUnderTarget(std::vector<point> hulls, point lowestPoint, point target)
+{
+	vector t = CalculationHelper::ToVector(lowestPoint, target);
+	vector v;
+	int index = 0;
+
+	for (int i = 1; i < hulls.size(); i++)
+	{
+		v = CalculationHelper::ToVector(hulls[0], hulls[i]);
+
+		if (CalculationHelper::IsCCW(v, t) != -1)
+		{
+			index = i;
+		}
+		else { break; }
+	}
+	return index;
+}

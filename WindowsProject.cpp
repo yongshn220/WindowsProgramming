@@ -15,6 +15,7 @@ void DrawPoint(ID2D1HwndRenderTarget* pRenderTarget, ID2D1SolidColorBrush* pBrus
 void CreateButton(HWND hwnd);
 void ShowMinkowskiDiff(HWND hwnd);
 void ShowMinkowskiSum(HWND hwnd);
+void ShowGJK(HWND hwnd);
 
 PointConvex* pc;
 QuickHull* qh;
@@ -100,8 +101,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         
         // ShowPointConvex(hwnd);
         // ShowQuickHull(hwnd);
-         ShowMinkowskiDiff(hwnd);
-        //ShowMinkowskiSum(hwnd);
+        // ShowMinkowskiDiff(hwnd);
+        // ShowMinkowskiSum(hwnd);
+        ShowGJK(hwnd);
 
         EndPaint(hwnd, &ps);
         break;
@@ -115,6 +117,62 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 void CreateButton(HWND hwnd)
 {
     CreateWindowW(L"Button", L"Button", WS_VISIBLE | WS_CHILD, 0, 100, 50, 100, hwnd, (HMENU)1, NULL, NULL);
+}
+
+void ShowGJK(HWND hwnd)
+{
+    ID2D1Factory* pFactory = NULL;
+    ID2D1HwndRenderTarget* pRenderTarget = NULL;
+    ID2D1SolidColorBrush* pBrush = NULL;
+    D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pFactory);
+    HRESULT hr = S_OK;
+    RECT rc;
+    GetClientRect(hwnd, &rc);
+
+    D2D1_SIZE_U size = D2D1::SizeU(rc.right, rc.bottom);
+
+    hr = pFactory->CreateHwndRenderTarget(
+        D2D1::RenderTargetProperties(),
+        D2D1::HwndRenderTargetProperties(hwnd, size),
+        &pRenderTarget);
+
+    D2D1_COLOR_F c = D2D1::ColorF(D2D1::ColorF::Green);
+
+    pRenderTarget->CreateSolidColorBrush(c, &pBrush);
+
+    pRenderTarget->BeginDraw();
+
+    pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::Black));
+
+    for (int i = 0; i < mk->hullsA.size(); i++)
+    {
+        c = D2D1::ColorF(D2D1::ColorF::Blue);
+        pRenderTarget->CreateSolidColorBrush(c, &pBrush);
+        DrawPoint(pRenderTarget, pBrush, mk->hullsA[i]);
+    }
+
+    for (int i = 0; i < mk->hullsB.size(); i++)
+    {
+        c = D2D1::ColorF(D2D1::ColorF::Green);
+        pRenderTarget->CreateSolidColorBrush(c, &pBrush);
+        DrawPoint(pRenderTarget, pBrush, mk->hullsB[i]);
+    }
+
+    for (int i = 0; i < mk->diffPoints.size(); i++)
+    {
+        if (mk->isOverlap)
+        {
+            c = D2D1::ColorF(D2D1::ColorF::Red);
+        }
+        else
+        {
+            c = D2D1::ColorF(D2D1::ColorF::White);
+        }
+        
+        pRenderTarget->CreateSolidColorBrush(c, &pBrush);
+        DrawPoint(pRenderTarget, pBrush, mk->diffPoints[i]);
+    }
+    pRenderTarget->EndDraw();
 }
 
 void ShowMinkowskiSum(HWND hwnd)

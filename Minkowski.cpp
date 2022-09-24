@@ -10,7 +10,7 @@ void Minkowski::Reset()
 	Minkowski::sumPoints = {};
 	Minkowski::diffPoints = {};
 	
-	Minkowski::ishit = false;
+	Minkowski::isOverlap = false;
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -35,6 +35,7 @@ void Minkowski::Reset()
 
 void Minkowski::Calculate()
 {
+	Minkowski::isOverlap = false;
 	for (int i = 0; i < Minkowski::pointsA.size(); i++)
 	{
 		for (int j = 0; j < Minkowski::pointsA.size(); j++)
@@ -50,8 +51,5 @@ void Minkowski::Calculate()
 	Minkowski::diffPoints = CalculationHelper::GetOutterHulls(Minkowski::diffPoints);
 
 
-	for (int i = 0; i < Minkowski::pointsA.size(); i++)
-	{
-
-	}
+	Minkowski::isOverlap = CalculationHelper::IsPointInsideConvex(diffPoints, { 0,0 });
 }
