@@ -11,7 +11,8 @@
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void CreateButton(HWND hwnd);
-void ShowGJK(HWND hwnd);
+void ShowLine();
+void ConvexHullEX();
 
 PointConvex* pc;
 QuickHull* qh;
@@ -99,8 +100,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         // ShowQuickHull(hwnd);
         // ShowMinkowskiDiff(hwnd);
         // ShowMinkowskiSum(hwnd);
-        ShowGJK(hwnd);
-
+        ConvexHullEX();
         EndPaint(hwnd, &ps);
         break;
     }
@@ -115,7 +115,45 @@ void CreateButton(HWND hwnd)
     CreateWindowW(L"Button", L"Button", WS_VISIBLE | WS_CHILD, 0, 100, 50, 100, hwnd, (HMENU)1, NULL, NULL);
 }
 
-void ShowGJK(HWND hwnd)
+void ShowLine()
 {
-    draw->DrawPoint({ 100,100 }, "blue");
+    draw->BeginDraw();
+    draw->DrawPoint({ 100,100 }, "white");
+    draw->DrawLine({ 200, 100 }, { 200, 200 }, "blue");
+    draw->EndDraw();
+}
+
+void DrawLines(std::vector<point> points, std::string color)
+{
+    draw->DrawLine(points[0], points[1], color);
+    for (int i = 1; i < points.size(); i++)
+    {
+        draw->DrawLine(points[i - 1], points[i], color);
+    }
+}
+
+void ConvexHullEX()
+{
+    draw->BeginDraw();
+    DrawLines(pc->hulls, "white");
+    for (int i = 0; i < pc->points.size(); i++)
+    {
+        draw->DrawPoint(pc->points[i], "white");
+    }
+
+    for (int i = 0; i < pc->hulls.size(); i++)
+    {
+        draw->DrawPoint(pc->hulls[i], "blue");
+    }
+
+    if (pc->state)
+    {
+        draw->DrawPoint(pc->target, "green");
+    }
+
+    else
+    {
+        draw->DrawPoint(pc->target, "red");
+    }
+    draw->EndDraw();
 }

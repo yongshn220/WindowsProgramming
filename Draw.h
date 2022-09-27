@@ -23,9 +23,13 @@ public:
 
 	void Reset();
 
-	void DrawPoint(point p, std::string str);
+	D2D1_COLOR_F ConvertString(std::string colorStr);
+	
+	void DrawPoint(point p, std::string color);
 
-	void Show(point p);
+	void DrawLine(point p1, point p2, std::string color);
 
-	D2D1_COLOR_F ConvertString(std::string str);
+	void BeginDraw();
+
+	void EndDraw();
 };

@@ -1,20 +1,5 @@
 #include "Draw.h"
 
-
-void Draw::DrawPoint(point p, std::string str)
-{
-    Draw::Reset();
-    Draw::pRenderTarget->BeginDraw();
-
-    Draw::pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::Black));
-
-    D2D1_COLOR_F c = Draw::ConvertString(str);
-    Draw::pRenderTarget->CreateSolidColorBrush(c, &(Draw::pBrush));
-    Draw::Show(p);
-
-    Draw::pRenderTarget->EndDraw();
-}
-
 void Draw::Reset()
 {
     D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &(Draw::pFactory));
@@ -31,22 +16,53 @@ void Draw::Reset()
 
     D2D1_COLOR_F c = D2D1::ColorF(D2D1::ColorF::Green);
 
-    Draw::pRenderTarget->CreateSolidColorBrush(c, &pBrush);
+    Draw::pRenderTarget->CreateSolidColorBrush(c, &(Draw::pBrush));
 }
 
-
-void Draw::Show(point p)
+D2D1_COLOR_F Draw::ConvertString(std::string colorStr)
 {
+    std::string black = "black";
+    std::string blue = "blue";
+    std::string green = "green";
+    std::string white = "white";
+    std::string red = "red";
+
+    if (colorStr.compare(black) == 0) return D2D1::ColorF(D2D1::ColorF::Black);
+    if (colorStr.compare(blue) == 0 ) return D2D1::ColorF(D2D1::ColorF::Blue);
+    if (colorStr.compare(green) == 0) return D2D1::ColorF(D2D1::ColorF::Green);
+    if (colorStr.compare(white) == 0) return D2D1::ColorF(D2D1::ColorF::White);
+    if (colorStr.compare(red) == 0) return D2D1::ColorF(D2D1::ColorF::Red);
+    return D2D1::ColorF(D2D1::ColorF::White);
+}
+
+void Draw::DrawPoint(point p, std::string color)
+{
+    D2D1_COLOR_F c = Draw::ConvertString(color);
+    Draw::pRenderTarget->CreateSolidColorBrush(c, &(Draw::pBrush));
     D2D1_ELLIPSE ellipse = D2D1::Ellipse(D2D1::Point2F(p.x, p.y), 4, 4);
     Draw::pRenderTarget->FillEllipse(ellipse, pBrush);
 }
 
-D2D1_COLOR_F Draw::ConvertString(std::string str)
+void Draw::DrawLine(point p1, point p2, std::string color)
 {
-    std::string black = "black";
-    std::string blue = "blue";
-    
-    if (str.compare(black) == 0) return D2D1::ColorF(D2D1::ColorF::Black);
-    if (str.compare(blue) == 0 ) return D2D1::ColorF(D2D1::ColorF::Blue);
-    return D2D1::ColorF(D2D1::ColorF::White);
+    D2D1_COLOR_F c = Draw::ConvertString(color);
+    Draw::pRenderTarget->CreateSolidColorBrush(c, &(Draw::pBrush));
+    Draw::pRenderTarget->DrawLine(
+        D2D1::Point2F(p1.x, p1.y),
+        D2D1::Point2F(p2.x, p2.y),
+        Draw::pBrush,
+        3.0f
+    );
+}
+
+void Draw::BeginDraw()
+{
+    Draw::Reset();
+    Draw::pRenderTarget->BeginDraw();
+    Draw::pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::Black));
+}
+
+void Draw::EndDraw()
+{
+    Draw::pRenderTarget->EndDraw();
 }
