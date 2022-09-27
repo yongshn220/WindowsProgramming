@@ -3,6 +3,7 @@
 #endif 
 
 #include <windows.h>
+#include <Windowsx.h>
 #include "Draw.h"
 
 #include "PointConvex.h"
@@ -13,6 +14,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void CreateButton(HWND hwnd);
 void ShowLine();
 void ConvexHullEX();
+void OnLButtonDown(int pixelX, int pixelY, DWORD flags);
+void OnLButtonUp();
+void OnMouseMove(int pixelX, int pixelY, DWORD flags);
 
 PointConvex* pc;
 QuickHull* qh;
@@ -104,6 +108,20 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         EndPaint(hwnd, &ps);
         break;
     }
+
+    case WM_LBUTTONDOWN:
+        OnLButtonDown(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), (DWORD)wParam);
+        return 0;
+
+    case WM_LBUTTONUP:
+        OnLButtonUp();
+        return 0;
+
+    case WM_MOUSEMOVE:
+        OnMouseMove(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), (DWORD)wParam);
+        return 0;
+
+
     return 0;
     }
 
@@ -156,4 +174,17 @@ void ConvexHullEX()
         draw->DrawPoint(pc->target, "red");
     }
     draw->EndDraw();
+}
+
+void OnLButtonDown(int pixelX, int pixelY, DWORD flags)
+{
+
+}
+void OnLButtonUp()
+{
+
+}
+void OnMouseMove(int pixelX, int pixelY, DWORD flags)
+{
+
 }

@@ -66,3 +66,15 @@ void Draw::EndDraw()
 {
     Draw::pRenderTarget->EndDraw();
 }
+
+pixel Draw::PointToPixel(point pt)
+{
+    pixel px = { pt.x * Draw::magnify + Draw::xff, pt.y * Draw::magnify + Draw::yff };
+    return px;
+}
+
+point Draw::PixelToPoint(pixel px)
+{
+    point pt = { (px.x - Draw::xff) / Draw::magnify, (px.y - Draw::yff) / Draw::magnify };
+    return pt;
+}

@@ -25,3 +25,9 @@ struct vector
 	float x;
 	float y;
 };
+
+struct pixel
+{
+	float x;
+	float y;
+};

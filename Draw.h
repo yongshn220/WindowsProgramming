@@ -15,10 +15,16 @@ public:
 	ID2D1HwndRenderTarget* pRenderTarget;
 	ID2D1SolidColorBrush* pBrush;
 
+	int magnify;
+	int xff;
+	int yff;
 
 	Draw(HWND h) : pFactory(NULL), pRenderTarget(NULL), pBrush(NULL)
 	{
 		hwnd = h;
+		magnify = 1;
+		xff = 0;
+		yff = 0;
 	}
 
 	void Reset();
@@ -32,4 +38,7 @@ public:
 	void BeginDraw();
 
 	void EndDraw();
+
+	pixel PointToPixel(point pt);
+	point PixelToPoint(pixel px);
 };
